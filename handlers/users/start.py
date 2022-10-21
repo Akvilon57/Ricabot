@@ -14,7 +14,7 @@ from utils.misc import rate_limit
 @rate_limit(limit=5)
 
 
-@dp.message_handler(text=['/start','/start@Serda2_bot'])
+@dp.message_handler(text=['/start','/start@RicamareBot'])
 
 
 async def  command_start(message: types.Message):

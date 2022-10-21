@@ -9,7 +9,7 @@ from utils.misc import rate_limit
 
 
 @rate_limit(limit=5)
-@dp.message_handler(text=['/stop','/stop@Serda2_bot'])
+@dp.message_handler(text=['/stop','/stop@RicamareBot'])
 
 
 async def  command_stop(message: types.Message):
