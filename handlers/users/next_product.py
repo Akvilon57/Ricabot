@@ -15,7 +15,7 @@ async def  cart_product(message: types.Message):
 	categ=user['last_category']
 	lang=user['lang']
 	catalog=user['last_catalog']
-	print(mas)
+	#print(mas)
 	
 	#---------------------------------------------
 	#media = types.MediaGroup()
@@ -31,8 +31,8 @@ async def  cart_product(message: types.Message):
 		if inf==catalog:
 			for catt in categorys:
 				if catt==categ:
-					print(catt,st_categor)
-					print(inf,st_categor)
+					#print(catt,st_categor)
+					#print(inf,st_categor)
 					break
 				else:
 					st_categor+=1
@@ -44,7 +44,7 @@ async def  cart_product(message: types.Message):
 
 
 
-	print(cart_dlin)
+	#print(cart_dlin)
 	if cart_dlin > user['numb_category']:
 	
 		numb_cart=user['numb_category']

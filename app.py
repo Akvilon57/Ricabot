@@ -14,7 +14,7 @@ async def on_startup(dp):
 	await set_default_commands(dp)
 
 
-	print('Go')	
+	print('Poexali')	
 
 	
 

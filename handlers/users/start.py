@@ -3,7 +3,7 @@ import asyncio
 from aiogram import types  
 from loader import dp, bot
 from keyboards.category import catalog
-from data.config import JRASS, GROUP
+from data.config import JRASS, admin_shop, admins, A
 import datetime
 import json
 from utils.misc import rate_limit
@@ -19,12 +19,16 @@ from utils.misc import rate_limit
 
 async def  command_start(message: types.Message):
 
-
+	spi=[admin_shop,admins,A]
 	if message.from_user.language_code == 'uk':
 		await message.answer(f'Оберіть категорію:', reply_markup=catalog(message.from_user.id,'Українська мова'))
 	else:
 		await message.answer(f'Выберите категорию:', reply_markup=catalog(message.from_user.id,'Русский язык'))
-	#print(message.from_user)
+	
+	if str(message.from_user.id) not in spi:
+
+		await bot.send_message(admin_shop,f"{message.from_user.id}(Имя: {message.from_user.first_name}, юзернейм: {message.from_user.username}, язык: {message.from_user.language_code}")
+	
 
 	#Записываем юзера в базу
 	today = datetime.datetime.today()

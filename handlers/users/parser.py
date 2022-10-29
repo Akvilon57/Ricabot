@@ -20,26 +20,6 @@ def timepars():
 
 
 
-
-
-
-
-
-async def eternity():
-	print('st')
-	await asyncio.sleep(120)
-	print('yay!')
-
-async def mains_timer():
-		try:
-			await asyncio.wait_for(eternity(), timeout=10)
-			
-		except asyncio.TimeoutError:
-			print('fack')
-			pass
-
-
-
 @dp.message_handler(text=['parser_start','parser_stop'])
 async def  command_help(message: types.Message):
 	global tik, key
@@ -57,7 +37,7 @@ async def  command_help(message: types.Message):
 
 		while key:
 			await bot.send_message(message.from_user.id,f'Парсер запущен, обновление произойдет через {tik/3600} часов')
-			await asyncio.sleep(tik)
+			await asyncio.sleep(1)
 			try:
 				rload()
 				await bot.send_message(message.from_user.id,'Базы успешно обновлены')

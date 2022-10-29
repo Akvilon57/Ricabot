@@ -7,12 +7,10 @@ from .product import dp
 from .next_product import dp
 from .back import dp
 from .telefon import dp
-from .chat import dp
-#from .help import dp
 from .basket_h import dp
 from .contacts import dp
 from .send_mail import dp
-#from .hello import ok,dp
+from .foto_send import dp
 #from .parser import dp
 
 

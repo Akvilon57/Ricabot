@@ -1,4 +1,5 @@
 import asyncio
+from data.config import admin_shop,admins,A
 
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import DEFAULT_RATE_LIMIT
@@ -20,6 +21,7 @@ class ThrottlingMiddleware(BaseMiddleware):
         super(ThrottlingMiddleware, self).__init__()
 
     async def on_process_message(self, message: types.Message, data: dict):
+        spi=[admin_shop,admins,A]
         """
         This handler is called when dispatcher receives a message
 
@@ -39,24 +41,26 @@ class ThrottlingMiddleware(BaseMiddleware):
             key = f"{self.prefix}_message"
 
         # Use Dispatcher.throttle method.
-        try:
-            await dispatcher.throttle(key, rate=limit)
-        except Throttled as t:
-            # Execute action
-            await self.message_throttled(message, t)
+        if str(message.from_user.id) not in spi: 
+            try:
+                await dispatcher.throttle(key, rate=limit)
+            except Throttled as t:
+                # Execute action
+                await self.message_throttled(message, t)
 
-            # Cancel current handler
-            raise CancelHandler()
+                # Cancel current handler
+                raise CancelHandler()
 
     async def message_throttled(self, message: types.Message, throttled: Throttled):
         """
         Notify user only on first exceed and notify about unlocking only on last exceed
-
+    
         :param message:
         :param throttled:
         """
         handler = current_handler.get()
         dispatcher = Dispatcher.get_current()
+        
         if handler:
             key = getattr(handler, 'throttling_key', f"{self.prefix}_{handler.__name__}")
         else:
@@ -66,9 +70,12 @@ class ThrottlingMiddleware(BaseMiddleware):
         delta = throttled.rate - throttled.delta
 
         # Prevent flooding
-        if throttled.exceeded_count <= 2:
-            await message.reply('Очень часто запрошена команда! Вы, случайно не робот? ')
 
+        if throttled.exceeded_count <= 2:
+            if message.from_user.language_code == 'uk':
+                await message.reply('Дуже часто запитана команда! Ви випадково не робот?')
+            else:
+                await message.reply('Очень часто запрошена команда! Вы, случайно не робот?')
         # Sleep.
         await asyncio.sleep(delta)
 
@@ -77,6 +84,9 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         # If current message is not last with current key - do not send message
         if thr.exceeded_count == throttled.exceeded_count:
-            await message.reply('Клавиатура раблокирована.')
+            if message.from_user.language_code == 'uk':
+                await message.reply('Клавіатура розблокована.')
+            else:
+                await message.reply('Клавиатура раблокирована.')
 
 

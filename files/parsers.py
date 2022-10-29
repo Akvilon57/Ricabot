@@ -23,7 +23,7 @@ scan_stranic = []
 def potok(urlss,funcs,z=0,):
     global t
     dlin=len(urlss)
-    if dlin<30:
+    if dlin<2:
         tr=[]
         for url in urlss:
             if z==0:
@@ -37,13 +37,13 @@ def potok(urlss,funcs,z=0,):
             i.join()
     else:
         
-        shag=30
-        ost=dlin%30
-        col=int(dlin/30)
+        shag=2
+        ost=dlin%2
+        col=int(dlin/2)
         d=1
         stop=True
         while stop:
-            print(f'Download : {d*30} urls')
+            print(f'Download : {d*2} urls')
             if d<col:
                 tr=[]
                 for url in urlss[(d*shag)-shag:d*shag]:
@@ -496,7 +496,7 @@ def kartochka(soup,jaz):
             if '\xbe' in value:
                 #spis.replace('\xbe','3/4')
                 print(key)
-   
+    print(spis)
     return spis
 
 

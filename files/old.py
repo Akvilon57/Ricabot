@@ -5,6 +5,10 @@ from urllib.request import urlopen
 import pandas as pd
 from bs4 import BeautifulSoup
 from datetime import datetime
+from fake_useragent import UserAgent
+import requests
+from random import  randint
+
 
 spisua={'casual':'Одяг',
 'blouse':'Сорочки та блузи',
@@ -129,11 +133,14 @@ def translite(size):
 
 def getTitle(url):
     try:
-        html = urlopen(url)
+        #html = urlopen(url)
+        response = requests.get(url,timeout=randint(10,27), headers={'User-Agent': UserAgent().chrome})#,verify=False
+        requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+        html = response.content
     except HTTPError as e:
         return None
     try:
-        bs = BeautifulSoup(html.read(), 'html.parser')
+        bs = BeautifulSoup(html, 'html.parser')
         # title = bs.body.h1
     except AttributeError as e:
         return None
@@ -250,7 +257,8 @@ def kartochka(soup,jaz):
         fs = child['src']
         foto.append(f'https://ricamare.com.ua{fs}')
         color.append(child.div.get_text())
-
+    if len(foto)==0:
+        return False
     size = []
     for sod in ti.find_all('script'):
         a = sod.get_text()
@@ -301,7 +309,7 @@ def kartochka(soup,jaz):
                         category = line[13:-2]
             except UnicodeDecodeError:
                 category = None
-
+    print(size)
     spis = {'articul': articul_s, 'name': names, 'price_old': price_old, 'price_new': price_new, 'foto': foto,
             'color': color, 'size': size, 'category': category, 'sostav': sostavs, 'opisanie': opisanie}
     for key, value in spis.items():
@@ -381,6 +389,7 @@ def ends():
             try:
                 ti = getTitle(urls)
                 kart = kartochka(ti,jaz)
+                
             except Exception:   
                 while True:
                     if s<7: 
@@ -388,6 +397,7 @@ def ends():
                         try:
                             ti = getTitle(urls)
                             kart = kartochka(ti,jaz)
+                            
                         except Exception:
                             s+=1
                     else:
@@ -458,7 +468,7 @@ def ua():
 
 
                         to['size']=d
-                    #print(f'!!! {d}\n')
+                    print(f'!!! {d}\n')
 
                     
 

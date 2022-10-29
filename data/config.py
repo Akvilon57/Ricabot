@@ -6,9 +6,11 @@ load_dotenv()
 
 BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
 admins = str(os.getenv("ADMINS"))
-admin_shop=str(os.getenv("ADMIN_SHOP")) 
+admin_shop=str(os.getenv("ADMIN_SHOP"))
+A=str(os.getenv("A")) 
 slov= str(os.getenv("SLOV"))
-GROUP= str(os.getenv("Ric_group"))
+GROUP = str(os.getenv("Ric_group"))
+GROUPTELE = str(os.getenv("Ric_tele"))
 
 
 JZAK = str(os.getenv("JZAK"))

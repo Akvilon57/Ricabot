@@ -65,18 +65,22 @@ async def  chat_privat(call: CallbackQuery):
 			
 			price_new=slova[0]
 			price_old='\n'
+			
 			if k['price_old'] !='':
 				if k['price_old'] != None:
 					price_old = f"\n{slova[1]}<s>{k['price_old']}</s>\n"
 					price_new = slova[2]
+			
 
-			if k['sostav']=='' or k['sostav']==':':
+			if len(k['sostav'])<3:
 				cart = f"{hlink(k['articul'], k['urls'])}" \
 					f"{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n"
 			else:
 				cart = f"{hlink(k['articul'], k['urls'])}" \
 				f"{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n" \
 				f"{hbold(slova[3])}{k['sostav']}\n"
+
+
 			foto=k['foto']
 			
 			await bot.send_photo(call.from_user.id, photo=foto[0], caption=cart, reply_markup=menu_iline(lang,st,st_categor,numb_cart))

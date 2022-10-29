@@ -99,7 +99,7 @@ def menu_iline2(lang,infa_cart,size,articul,price):
 		d=[]
 		for inline in size:
 			sizes=''.join(inline.split())
-			sin=InlineKeyboardButton(text = inline.title(), callback_data=f'{infa_cart} {articul} {price} {sizes}')
+			sin=InlineKeyboardButton(text = inline.replace(',','').replace('&quot','').title(), callback_data=f'{infa_cart} {articul} {price} {sizes}')
 			d.append(sin)
 		stok=len(size)//2
 		ost=len(size)%2

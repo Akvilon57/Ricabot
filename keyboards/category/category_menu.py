@@ -17,7 +17,7 @@ def catalog(user_id,lang):
 		mas[user_id]={}
 		add=mas[user_id]
 		add['lang']=lang		
-		print(mas)
+		#print(mas)
 	menu=[]	
 	book=lang_bot(lang)
 	for v in book:
@@ -176,9 +176,12 @@ def menu_end(lang):
 
 def menu_main(user_id):
 	global mas
-	user=mas[user_id]
-	lang=user['lang']
-	menu=catalog(user_id,lang)
+	try:
+		user=mas[user_id]
+		lang=user['lang']
+		menu=catalog(user_id,lang)
+	except Exception:
+		menu==None
 	return menu
 	
 

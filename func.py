@@ -14,11 +14,11 @@ def del_basket(user_id):
         datau=f['del_basket']
         use=str(user_id)
         if use in datau:
-            print('est')
+            #print('est')
             user=datau[use]
             user.append(today_data)
         else:
-            print('net')
+            #print('net')
             datau[use]=[]
             user=datau[use]
             user.append(today_data)
@@ -73,7 +73,7 @@ def zakaz_list(user_id, articul_id, size_id, price, d_w='del_all'):
             else:
                 data[user_id]={articul_id: {'price': price_id, size_id: 1}}
 
-            print(data)
+            #print(data)
             file.seek(0)
             file.truncate(0)
             json.dump(data, file)
@@ -130,7 +130,7 @@ def zakaz_list(user_id, articul_id, size_id, price, d_w='del_all'):
                 file.close()
 
                 del_basket(user_id)        
-                print(data)
+                #print(data)
 
 
 
@@ -183,7 +183,7 @@ def basket(lang,user_id,condition,tel=''):
 
         elif condition == 'del':
             if lang=='Русский язык':
-                print(user_id)
+                #print(user_id)
                 if user_id in data:
                     articuls=data[user_id]
                     

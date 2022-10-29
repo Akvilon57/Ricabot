@@ -8,15 +8,14 @@ import random
 import json
 from urllib.request import urlopen
 from datetime import datetime
-from data.config import JRASS, JLZ
-
+from data.config import JRASS, JLZ, GROUPTELE
 from utils.misc import rate_limit
 
 
 def timepars(days=0):
 	global t
 	s=datetime.now()
-	start = 11
+	start = 8
 	x,y =int(s.hour),int(s.minute)
 	h=(days*24)+24+start-x
 	if y>0:
@@ -31,6 +30,8 @@ def timepars(days=0):
 
 @dp.message_handler(text=['startmail','startskidki'])
 async def  start_m(message: types.Message):
+	global media
+	slova=['Ціна: ','Повна ціна: ','Акційна ціна🔥: ','Склад: ','Опис: ']
 	user=[str(admin_shop),str(admins)]
 	if str(message.from_user.id) in user:
 		mail = message.text
@@ -52,22 +53,27 @@ async def  start_m(message: types.Message):
 				if mail == 'startmail':
 					k= sez[random.randint(0, len(infa[sezon])-1)]
 					arti=f"Артикул: {k['articul']}"
-					otpiska = f"{hlink('Отписаться от рассылки', 'https://t.me/RicamareBot/stop')}\n"
-					tele = f"{hlink('Телеграмм канал', 'https://t.me/RicaMare_shops')}"
+					otpiska = f"🤖@RicamareBot   "
+					tele = f"{hlink('📱Телеграмм', 'https://t.me/RicaMare_shops')}"
 					opis=''
+					price_new=slova[0]
+					price_old='\n'
+			
+					if k['price_old'] !='':
+						if k['price_old'] != None:
+							price_old = f"\n{slova[1]}<s>{k['price_old']}</s>\n"
+							price_new = slova[2]
+					
 					if k['opisanie'] !='':		
 						if k['opisanie'] !=':':
 							if k['opisanie'] != None: 
-								opis=f"{hbold('Опис: ')}{k['opisanie']}\n "
-					
-					sklad=''
-					if k['sostav'] !='':		
-						if k['sostav'] !=':':
-							if k['sostav'] !=': ':
-								sklad=f"{hbold('Слад: ')}{k['sostav']}\n\n"
+								opis=f"{hbold(slova[4])}{k['opisanie']}\n "
 
-					cart = f"{hlink(arti, k['urls'])}\n{hbold('Цiна: ')}{hbold(k['price_new'])}\n\n{sklad}{opis}{otpiska}https://t.me/RicaMare_shops"
 
+					if len(k['sostav'])<3:
+						cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{opis}{otpiska}{tele}"
+					else:
+						cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{hbold(slova[3])}{k['sostav']}\n\n{opis}{otpiska}{tele}"
 				elif mail == 'startskidki':
 					price_old=''
 					while True:
@@ -77,22 +83,27 @@ async def  start_m(message: types.Message):
 								price_old=f"{hbold('Цiна: ')}<s>{k['price_old']}</s>"
 								break
 					arti=f"Артикул: {k['articul']}"
-					otpiska = f"{hlink('Отписаться от рассылки', 'https://t.me/RicamareBot/stop')}\n"
-					tele = f"{hlink('Телеграмм канал', 'https://t.me/RicaMare_shops')}"
+					otpiska = f"🤖@RicamareBot   "
+					tele = f"{hlink('📱Телеграмм', 'https://t.me/RicaMare_shops')}"
 					opis=''
+					price_new=slova[0]
+					price_old='\n'
+			
+					if k['price_old'] !='':
+						if k['price_old'] != None:
+							price_old = f"\n{slova[1]}<s>{k['price_old']}</s>\n"
+							price_new = slova[2]
+					
 					if k['opisanie'] !='':		
 						if k['opisanie'] !=':':
 							if k['opisanie'] != None: 
-								opis=f"{hbold('Опис: ')}{k['opisanie']}\n "
-					
-					sklad=''
-					if k['sostav'] !='':		
-						if k['sostav'] !=':':
-							if k['sostav'] !=': ':
-								sklad=f"{hbold('Слад: ')}{k['sostav']}\n\n"
-					
-					cart = f"{hlink(arti, k['urls'])}\n{price_old}\n{hbold('Цiна: ')}<a style='color:#FF0000'>{k['price_new']}</a>\n\n{sklad}{opis}{otpiska}https://t.me/RicaMare_shops"
+								opis=f"{hbold(slova[4])}{k['opisanie']}\n "
 
+
+					if len(k['sostav'])<3:
+						cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{opis}{otpiska}{tele}"
+					else:
+						cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{hbold(slova[3])}{k['sostav']}\n\n{opis}{otpiska}{tele}"
 
 
 
@@ -119,21 +130,25 @@ async def  start_m(message: types.Message):
 					usersmail=datas['usermail']
 					for user,value in usersmail.items():
 						if value == 1:
-							await bot.send_media_group(user, media=media)
+							try:
+								await bot.send_media_group(user, media=media)
+							except Exception as ed:
+								print(f'{user}:{ed}')
 					fi.close()
 				
 				file.close()
-				await asyncio.sleep(10)
+				
 
 
 	
 @dp.message_handler(filters.Text(contains='sicapau', ignore_case=True))
 async def stop_m(message: types.Message):
+	slova=['Ціна: ','Повна ціна: ','Акційна ціна🔥: ','Склад: ', 'Опис: ']
 	user=[str(admin_shop),str(admins)]
 	if str(message.from_user.id) in user:
 		k=''
 		art=message.text.upper().replace('SICAPAU','').strip()
-		print(art)
+		#print(art)
 		with open(JLZ, 'r', encoding='utf-8') as file:
 			infa = json.load(file)
 			for tov in infa.values():
@@ -141,29 +156,28 @@ async def stop_m(message: types.Message):
 					if art in cart['articul']:
 						k=cart
 			if k !='':
-				price_new='Цiна: '
+				arti=f"Артикул: {k['articul']}"
+				otpiska = f"🤖@RicamareBot   "
+				tele = f"{hlink('📱Телеграмм', 'https://t.me/RicaMare_shops')}"
+				opis=''
+				price_new=slova[0]
 				price_old='\n'
+			
 				if k['price_old'] !='':
 					if k['price_old'] != None:
-						price_old=f"\nПовна цiна: <s>{k['price_old']}</s>\n"
-						price_new='Акційна ціна: '
-				arti=f"Артикул: {k['articul']}"
-				otpiska = f"{hlink('Отписаться от рассылки', 'https://t.me/RicamareBot/stop')}\n"
-				tele = f"{hlink('Телеграмм чат:', 'https://t.me/+FzUwcj5hV_lmZDUy')}"
-				opis=''
+						price_old = f"\n{slova[1]}<s>{k['price_old']}</s>\n"
+						price_new = slova[2]
+					
 				if k['opisanie'] !='':		
 					if k['opisanie'] !=':':
-						if k['opisanie'] != None: 
-							opis=f"{hbold('Опис: ')}{k['opisanie']}\n "
-						
-				sklad=''
-				if k['sostav'] !='':		
-					if k['sostav'] !=':':
-						if k['sostav'] !=': ':
-							sklad=f"{hbold('Слад: ')}{k['sostav']}\n\n"
-						
-				cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{sklad}{opis}{otpiska}https://t.me/RicaMare_shops"
+						if k['opisanie'] != None:
+							opis=f"{hbold(slova[4])}{k['opisanie']}\n"
 
+
+				if len(k['sostav'])<3:
+					cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{opis}{otpiska}{tele}"
+				else:
+					cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{hbold(slova[3])}{k['sostav']}\n\n{opis}{otpiska}{tele}"
 
 
 
@@ -184,13 +198,19 @@ async def stop_m(message: types.Message):
 					else:
 						i = 1
 						break
-				
+
+				await bot.send_media_group(GROUPTELE, media=media)
+
 				with open(JRASS, 'r',encoding='utf-8') as fi:
 					datas = json.load(fi)
 					usersmail=datas['usermail']
 					for user,value in usersmail.items():
 						if value == 1:
-							await bot.send_media_group(user, media=media)
+							try:
+								await bot.send_media_group(user, media=media)
+							except Exception as er:
+								print(f"{user}:{er}")
+
 					fi.close()
 				file.close()
 			
@@ -205,11 +225,16 @@ async def stop_m(message: types.Message):
 
 @dp.message_handler(text=['startteleg','stopteleg'])
 async def  start_m(message: types.Message):
+	slova=['Ціна: ','Повна ціна: ','Акційна ціна🔥: ','Склад: ','Опис: ']
 	user=[str(admin_shop),str(admins)]
 	if str(message.from_user.id) in user:	
 		global medias,foto
 		mail = message.text
-		while True:
+		prov=True
+		if mail=='stopteleg':
+			prov=False
+			
+		while prov:
 			t=timepars()
 			
 			sezon=''
@@ -227,26 +252,34 @@ async def  start_m(message: types.Message):
 				
 
 				if mail == 'startteleg':
-					await asyncio.sleep(t)
+					
 					k= sez[random.randint(0, len(infa[sezon])-1)]
 					arti=f"Артикул: {k['articul']}"
-					otpiska = f"{hlink('🤖RicamareBot    ', 'https://t.me/RicamareBot')}"
+					otpiska = f"🤖@RicamareBot   "
 					tele = f"{hlink('📱Менеджер', 'https://t.me/RicaMare_shop')}"
 					opis=''
+					price_new=slova[0]
+					price_old='\n'
+			
+					if k['price_old'] !='':
+						if k['price_old'] != None:
+							price_old = f"\n{slova[1]}<s>{k['price_old']}</s>\n"
+							price_new = slova[2]
+					
 					if k['opisanie'] !='':		
 						if k['opisanie'] !=':':
 							if k['opisanie'] != None: 
-								opis=f"{hbold('Опис: ')}{k['opisanie']}\n "
-					
-					sklad=''
-					if k['sostav'] !='':		
-						if k['sostav'] !=':':
-							if k['sostav'] !=': ':
-								sklad=f"{hbold('Слад: ')}{k['sostav']}\n\n"
+								opis=f"{hbold(slova[4])}{k['opisanie']}\n "
 
-					cart = f"{hlink(arti, k['urls'])}\n{hbold('Цiна: ')}{hbold(k['price_new'])}\n\n{sklad}{opis}{otpiska}{tele}"
 
-					
+					if len(k['sostav'])<3:
+						cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{opis}{otpiska}{tele}"
+					else:
+						cart = f"{hlink(arti, k['urls'])}{price_old}{hbold(price_new)}{hbold(k['price_new'])}\n\n{hbold(slova[3])}{k['sostav']}\n\n{opis}{otpiska}{tele}"
+
+
+
+
 				try:
 					foto=k['foto']
 				except Exception as e:
@@ -269,13 +302,17 @@ async def  start_m(message: types.Message):
 						break
 				
 				
+				
 				try:
-					await bot.send_media_group('-1001693280958', media=medias)
-					await asyncio.sleep(60)
-				except Exception:
-					pass
-				if mail == 'stopteleg':
-					break			
+					await bot.send_media_group(GROUPTELE, media=medias)
+				except Exception as da:
+					print(da)
+				await asyncio.sleep(t)
+
+		await message.answer(f'Рассылка на канал остановлена.')
+				
+				
+
 				
 
 
